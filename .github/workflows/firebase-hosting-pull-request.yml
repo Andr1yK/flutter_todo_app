@@ -1,0 +1,46 @@
+name: Deploy to Firebase Hosting on PR
+
+'on': pull_request
+
+jobs:
+  build:
+    if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          flutter-version: '3.13.6'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build release project
+        run: flutter build web
+
+      - name: Upload production-ready build files
+        uses: actions/upload-artifact@v2
+        with:
+          name: production-files
+          path: ./build/web
+
+  deploy_preview:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: production-files
+          path: ./build/web
+
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FLUTTER_TODO_APP_14B85 }}'
+          projectId: flutter-todo-app-14b85
