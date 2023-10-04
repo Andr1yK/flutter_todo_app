@@ -5,9 +5,11 @@ class TodoItem extends StatelessWidget {
   const TodoItem({
     Key? key,
     required this.item,
+    required this.onStatusChange,
   }) : super(key: key);
 
   final Todo item;
+  final void Function(bool?) onStatusChange;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +19,7 @@ class TodoItem extends StatelessWidget {
     return ListTile(
       leading: Checkbox(
         value: isDone,
-        onChanged: (value) {},
+        onChanged: onStatusChange,
       ),
       title: Text(title),
     );
