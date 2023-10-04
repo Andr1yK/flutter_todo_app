@@ -28,7 +28,6 @@ jobs:
           path: |
             ./build/web
             firebase.json
-            .firebaserc
 
   deploy_preview:
     name: Deploy
@@ -45,5 +44,6 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          expires: 3d
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FLUTTER_TODO_APP_14B85 }}'
           projectId: flutter-todo-app-14b85
