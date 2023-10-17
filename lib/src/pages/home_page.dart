@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/src/component/todos/TodoList/TodoList.dart';
+import 'package:flutter_todo_app/src/component/todos/AddTodoForm/add_todo_form.dart';
+import 'package:flutter_todo_app/src/component/todos/TodoList/todo_list.dart';
 import 'package:flutter_todo_app/src/types/todo.typedefs.dart';
 
 class HomePage extends StatefulWidget {
@@ -34,15 +35,42 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void addTodo(String title,) {
+    var newTodo = Todo(
+      id: todos.length + 1,
+      isDone: false,
+      title: title,
+    );
+
+    var newTodos = [newTodo, ...todos];
+
+    setTodos(newTodos);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home Page'),
       ),
-      body: TodoList(
-        todos: todos,
-        setTodos: setTodos,
+      body: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          children: [
+            Expanded(
+              flex: 0,
+              child: AddTodoForm(
+                addTodo: addTodo
+              ),
+            ),
+            Expanded(
+              child: TodoList(
+              todos: todos,
+              setTodos: setTodos,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
