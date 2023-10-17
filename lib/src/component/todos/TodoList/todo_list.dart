@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/src/component/todos/TodoItem/TodoItem.dart';
+import 'package:flutter_todo_app/src/component/todos/TodoItem/todo_item.dart';
 import 'package:flutter_todo_app/src/types/todo.typedefs.dart';
 
 class TodoList extends StatelessWidget {

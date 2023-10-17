@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'src/pages/HomePage.dart';
+import 'src/pages/home_page.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
