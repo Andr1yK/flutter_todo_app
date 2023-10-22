@@ -91,7 +91,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 24
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -108,6 +111,9 @@ class _HomePageState extends State<HomePage> {
             ),
             Flexible(
               child: Container(
+                constraints: const BoxConstraints(
+                  maxWidth: 600,
+                ),
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   boxShadow: [
@@ -171,8 +177,10 @@ class Footer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color secondaryColor = Theme.of(context).colorScheme.secondary;
+
     int itemsLeft = todos.where((todo) => !todo.isDone).length;
-    bool shouldShowClearCompleted = todos.any((todo) => todo.isDone);
+
+    bool isMobile = MediaQuery.of(context).size.width < 520;
 
     return Container(
       decoration: const BoxDecoration(
@@ -185,40 +193,70 @@ class Footer extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 4,
+          horizontal: 12,
+          vertical: 4,
         ),
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              flex: 3,
-              child: Text(
+        child: isMobile
+          ? Column(
+            children: <Widget>[
+              Row(
+                children: [
+                  Text(
+                    '$itemsLeft items left',
+                    style: TextStyle(
+                      color: secondaryColor,
+                    ),
+                  ),
+                  const Spacer(),
+                  Container(
+                    alignment: Alignment.centerRight,
+                    child: FilterButton(
+                      text: 'Clear completed',
+                      onPressed: onClearCompleted,
+                      disabled: !todos.any((todo) => todo.isDone),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 4,
+              ),
+              Filters(
+                activeFilter: activeFilter,
+                onFilterChange: onFilterChange,
+              ),
+            ],
+        )
+          : Row(
+            children: <Widget>[
+              Text(
                 '$itemsLeft items left',
                 style: TextStyle(
                   color: secondaryColor,
                 ),
               ),
-            ),
-            Expanded(
-              flex: 4,
-              child: Filters(
+              const SizedBox(
+                width: 12,
+              ),
+              const Spacer(),
+              Filters(
                 activeFilter: activeFilter,
                 onFilterChange: onFilterChange,
               ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Container(
-                child: shouldShowClearCompleted
-                  ? FilterButton(
-                    text: 'Clear completed',
-                    onPressed: onClearCompleted,
-                  )
-                  : null,
+              const SizedBox(
+                width: 12,
               ),
-            ),
-          ],
-        ),
+              const Spacer(),
+              Container(
+                alignment: Alignment.centerRight,
+                child: FilterButton(
+                  text: 'Clear completed',
+                  onPressed: onClearCompleted,
+                  disabled: !todos.any((todo) => todo.isDone),
+                ),
+              ),
+            ],
+          ),
       ),
     );
   }
@@ -236,15 +274,26 @@ class Filters extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isMobile = MediaQuery.of(context).size.width < 520;
+
     return Row(
+      mainAxisAlignment: isMobile
+        ? MainAxisAlignment.spaceEvenly
+        : MainAxisAlignment.center,
       children: Filter.values.map((filter) {
-        return FilterButton(
+        Widget button = FilterButton(
           text: filter.label,
-          isSelected: this.activeFilter == filter,
+          isSelected: activeFilter == filter,
           onPressed: () {
             onFilterChange(filter);
           },
         );
+
+        return isMobile
+          ? Expanded(
+            child: button,
+          )
+          : button;
       }).toList(),
     );
   }
@@ -256,11 +305,13 @@ class FilterButton extends StatelessWidget {
     required this.text,
     required this.onPressed,
     this.isSelected = false,
+    this.disabled = false,
   });
 
   final String text;
   final void Function() onPressed;
   final bool isSelected;
+  final bool disabled;
 
   @override
   Widget build(BuildContext context) {
@@ -286,11 +337,13 @@ class FilterButton extends StatelessWidget {
         ),
         overlayColor: MaterialStateProperty.all(Colors.transparent),
       ),
-      onPressed: onPressed,
+      onPressed: disabled ? null : onPressed,
       child: Text(
         text,
+        textAlign: TextAlign.center,
         style: TextStyle(
-          color: secondaryColor,
+          color: disabled ? Colors.grey : secondaryColor,
+          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
         ),
       ),
     );
