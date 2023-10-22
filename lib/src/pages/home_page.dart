@@ -93,7 +93,9 @@ class _HomePageState extends State<HomePage> {
                       todos: todos,
                       setTodos: setTodos,
                     ),
-                    const Footer(),
+                    Footer(
+                      todos: todos,
+                    ),
                   ],
                 ),
               ),
@@ -108,11 +110,16 @@ class _HomePageState extends State<HomePage> {
 class Footer extends StatelessWidget {
   const Footer({
     super.key,
+    required this.todos,
   });
+
+  final List<Todo> todos;
 
   @override
   Widget build(BuildContext context) {
     Color secondaryColor = Theme.of(context).colorScheme.secondary;
+    int itemsLeft = todos.where((todo) => !todo.isDone).length;
+
 
     return Container(
       decoration: const BoxDecoration(
@@ -132,7 +139,7 @@ class Footer extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              '0 items left',
+              '$itemsLeft items left',
               style: TextStyle(
                 color: secondaryColor,
               ),
