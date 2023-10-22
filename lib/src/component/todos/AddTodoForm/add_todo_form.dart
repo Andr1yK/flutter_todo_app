@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AddTodoForm extends StatefulWidget {
-  const AddTodoForm({super.key, required this.addTodo});
+  const AddTodoForm({
+    super.key,
+    required this.addTodo,
+    required this.onToggleAll,
+  });
 
   final void Function(String title) addTodo;
+  final void Function() onToggleAll;
 
   @override
   AddTodoFormState createState() => AddTodoFormState();
@@ -43,7 +48,7 @@ class AddTodoFormState extends State<AddTodoForm> {
           Padding(
             padding: const EdgeInsets.only(left: 8),
             child: IconButton(
-              onPressed: () {},
+              onPressed: widget.onToggleAll,
               icon: const Icon(Icons.arrow_drop_down),
               iconSize: 32,
             ),

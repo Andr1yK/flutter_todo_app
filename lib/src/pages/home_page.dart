@@ -67,6 +67,20 @@ class _HomePageState extends State<HomePage> {
     setTodos(newTodos);
   }
 
+  void toggleAll() {
+    var allDone = todos.every((todo) => todo.isDone);
+
+    var newTodos = todos.map((todo) {
+      return Todo(
+        id: todo.id,
+        isDone: !allDone,
+        title: todo.title,
+      );
+    }).toList();
+
+    setTodos(newTodos);
+  }
+
   void setFilter(Filter newFilter) {
     setState(() {
       filter = newFilter;
@@ -113,7 +127,8 @@ class _HomePageState extends State<HomePage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     AddTodoForm(
-                      addTodo: addTodo
+                      addTodo: addTodo,
+                      onToggleAll: toggleAll,
                     ),
                     TodoList(
                       todos: todos,
