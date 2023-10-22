@@ -6,10 +6,12 @@ class TodoItem extends StatefulWidget {
     Key? key,
     required this.item,
     required this.onStatusChange,
+    required this.onDelete,
   }) : super(key: key);
 
   final Todo item;
   final void Function(bool?) onStatusChange;
+  final void Function() onDelete;
 
   @override
   State<TodoItem> createState() => _TodoItemState();
@@ -22,6 +24,7 @@ class _TodoItemState extends State<TodoItem> {
   Widget build(BuildContext context) {
     var isDone = widget.item.isDone;
     var title = widget.item.title;
+    var onDelete = widget.onDelete;
 
     return Container(
       // add top border
@@ -66,7 +69,7 @@ class _TodoItemState extends State<TodoItem> {
           trailing: isHovered
               ? IconButton(
                   icon: const Icon(Icons.close),
-                  onPressed: () {},
+                  onPressed: onDelete,
                 )
               : null,
           title: Text(title),
