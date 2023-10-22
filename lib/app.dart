@@ -10,8 +10,14 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'ToDo App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
+        fontFamilyFallback: const ['Helvetica', 'Arial', 'serif'],
+        fontFamily: 'Helvetica Neue',
         useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromRGBO(245, 245, 245, 1),
+          background: const Color.fromRGBO(245, 245, 245, 1),
+          secondary: const Color.fromRGBO(119, 119, 119, 1),
+        ),
       ),
       home: const HomePage(),
     );
