@@ -3,6 +3,16 @@ import 'package:flutter_todo_app/src/component/todos/AddTodoForm/add_todo_form.d
 import 'package:flutter_todo_app/src/component/todos/TodoList/todo_list.dart';
 import 'package:flutter_todo_app/src/types/todo.typedefs.dart';
 
+enum Filter {
+  all('All'),
+  active('Active'),
+  completed('Completed');
+
+  const Filter(this.label);
+
+  final String label;
+}
+
 class HomePage extends StatefulWidget {
   const HomePage({ super.key });
 
@@ -11,6 +21,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Filter filter = Filter.all;
+
   List<Todo> todos = const [
     Todo(
       id: 1,
@@ -45,6 +57,12 @@ class _HomePageState extends State<HomePage> {
     var newTodos = [newTodo, ...todos];
 
     setTodos(newTodos);
+  }
+
+  void setFilter(Filter newFilter) {
+    setState(() {
+      filter = newFilter;
+    });
   }
 
   @override
@@ -92,9 +110,12 @@ class _HomePageState extends State<HomePage> {
                     TodoList(
                       todos: todos,
                       setTodos: setTodos,
+                      filter: filter,
                     ),
                     Footer(
                       todos: todos,
+                      filter: filter,
+                      setFilter: setFilter,
                     ),
                   ],
                 ),
@@ -111,9 +132,13 @@ class Footer extends StatelessWidget {
   const Footer({
     super.key,
     required this.todos,
+    required this.filter,
+    required this.setFilter,
   });
 
   final List<Todo> todos;
+  final Filter filter;
+  final void Function(Filter) setFilter;
 
   @override
   Widget build(BuildContext context) {
@@ -144,8 +169,14 @@ class Footer extends StatelessWidget {
                 color: secondaryColor,
               ),
             ),
-            const Filters(),
-            const FilterButton(text: 'Clear completed'),
+            Filters(
+              filter: filter,
+              setFilter: setFilter,
+            ),
+            FilterButton(
+                text: 'Clear completed',
+                onPressed: () {},
+            ),
           ],
         ),
       ),
@@ -156,18 +187,25 @@ class Footer extends StatelessWidget {
 class Filters extends StatelessWidget {
   const Filters({
     super.key,
+    required this.filter,
+    required this.setFilter,
   });
+
+  final Filter filter;
+  final void Function(Filter) setFilter;
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
-      children: [
-        FilterButton(text: "All", isSelected: true),
-        SizedBox(width: 8),
-        FilterButton(text: "Active"),
-        SizedBox(width: 8),
-        FilterButton(text: "Completed"),
-      ],
+    return Row(
+      children: Filter.values.map((filter) {
+        return FilterButton(
+          text: filter.label,
+          isSelected: this.filter == filter,
+          onPressed: () {
+            setFilter(filter);
+          },
+        );
+      }).toList(),
     );
   }
 }
@@ -176,10 +214,12 @@ class FilterButton extends StatelessWidget {
   const FilterButton({
     super.key,
     required this.text,
+    required this.onPressed,
     this.isSelected = false,
   });
 
   final String text;
+  final void Function() onPressed;
   final bool isSelected;
 
   @override
@@ -207,7 +247,7 @@ class FilterButton extends StatelessWidget {
         ),
         overlayColor: MaterialStateProperty.all(Colors.transparent),
       ),
-      onPressed: () {},
+      onPressed: onPressed,
       child: Text(
         text,
         style: TextStyle(
