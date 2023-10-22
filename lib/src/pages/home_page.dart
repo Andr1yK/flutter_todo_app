@@ -130,10 +130,12 @@ class _HomePageState extends State<HomePage> {
                       addTodo: addTodo,
                       onToggleAll: toggleAll,
                     ),
-                    TodoList(
-                      todos: todos,
-                      setTodos: setTodos,
-                      filter: filter,
+                    Flexible(
+                      child: TodoList(
+                        todos: todos,
+                        setTodos: setTodos,
+                        filter: filter,
+                      ),
                     ),
                     Footer(
                       todos: todos,
