@@ -40,31 +40,61 @@ class AddTodoFormState extends State<AddTodoForm> {
       key: _formKey,
       child: Row(
         children: <Widget>[
-          Expanded(
-            child: TextFormField(
-              focusNode: _focusNode,
-              controller: _controller,
-              autofocus: true,
-              decoration: const InputDecoration(
-                hintText: 'Enter your todo',
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter some text';
-                }
-                return null;
-              },
-              onChanged: handleTitleChange,
-              onFieldSubmitted: (value) {
-                handleSubmit();
-              },
+          Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.arrow_drop_down),
+              iconSize: 32,
             ),
           ),
-          const SizedBox(width: 12),
-          ElevatedButton(
-            onPressed: handleSubmit,
-            child: const Text('Add'),
-          )
+          Expanded(
+            child: Container(
+              decoration: const BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromRGBO(0, 0, 0, 0.03),
+                    offset: Offset(0, 2),
+                    blurRadius: 1,
+                    spreadRadius: 0,
+                  ),
+                ],
+              ),
+              child: TextFormField(
+                focusNode: _focusNode,
+                controller: _controller,
+                autofocus: true,
+                decoration: const InputDecoration(
+                  hintText: 'What needs to be done?',
+                  contentPadding: EdgeInsets.all(16), // Padding
+                  border: InputBorder.none, // Remove the border
+                  fillColor: Colors.white,
+                  filled: true,
+                  hintStyle: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w300,
+                    fontStyle: FontStyle.italic,
+                    color: Color.fromRGBO(230, 230, 230, 1), // Text color
+                  ),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
+                onChanged: handleTitleChange,
+                onFieldSubmitted: (value) {
+                  handleSubmit();
+                },
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.normal, // or FontWeight.inherit for inheritance
+                  color: Colors.black, // Use your desired text color
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

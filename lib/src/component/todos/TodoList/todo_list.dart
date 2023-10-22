@@ -31,6 +31,7 @@ class TodoList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      shrinkWrap: true,
       children: todos.map(
         (todo) => TodoItem(
           key: Key(todo.id.toString()),
