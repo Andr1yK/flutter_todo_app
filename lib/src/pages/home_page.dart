@@ -59,6 +59,14 @@ class _HomePageState extends State<HomePage> {
     setTodos(newTodos);
   }
 
+  void onClearCompleted() {
+    var newTodos = todos.where(
+      (todo) => !todo.isDone
+    ).toList();
+
+    setTodos(newTodos);
+  }
+
   void setFilter(Filter newFilter) {
     setState(() {
       filter = newFilter;
@@ -114,8 +122,9 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Footer(
                       todos: todos,
-                      filter: filter,
-                      setFilter: setFilter,
+                      activeFilter: filter,
+                      onFilterChange: setFilter,
+                      onClearCompleted: onClearCompleted,
                     ),
                   ],
                 ),
@@ -132,19 +141,21 @@ class Footer extends StatelessWidget {
   const Footer({
     super.key,
     required this.todos,
-    required this.filter,
-    required this.setFilter,
+    required this.activeFilter,
+    required this.onFilterChange,
+    required this.onClearCompleted,
   });
 
   final List<Todo> todos;
-  final Filter filter;
-  final void Function(Filter) setFilter;
+  final Filter activeFilter;
+  final void Function(Filter) onFilterChange;
+  final void Function() onClearCompleted;
 
   @override
   Widget build(BuildContext context) {
     Color secondaryColor = Theme.of(context).colorScheme.secondary;
     int itemsLeft = todos.where((todo) => !todo.isDone).length;
-
+    bool shouldShowClearCompleted = todos.any((todo) => todo.isDone);
 
     return Container(
       decoration: const BoxDecoration(
@@ -161,21 +172,33 @@ class Footer extends StatelessWidget {
             vertical: 4,
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text(
-              '$itemsLeft items left',
-              style: TextStyle(
-                color: secondaryColor,
+            Expanded(
+              flex: 3,
+              child: Text(
+                '$itemsLeft items left',
+                style: TextStyle(
+                  color: secondaryColor,
+                ),
               ),
             ),
-            Filters(
-              filter: filter,
-              setFilter: setFilter,
+            Expanded(
+              flex: 4,
+              child: Filters(
+                activeFilter: activeFilter,
+                onFilterChange: onFilterChange,
+              ),
             ),
-            FilterButton(
-                text: 'Clear completed',
-                onPressed: () {},
+            Expanded(
+              flex: 2,
+              child: Container(
+                child: shouldShowClearCompleted
+                  ? FilterButton(
+                    text: 'Clear completed',
+                    onPressed: onClearCompleted,
+                  )
+                  : null,
+              ),
             ),
           ],
         ),
@@ -187,12 +210,12 @@ class Footer extends StatelessWidget {
 class Filters extends StatelessWidget {
   const Filters({
     super.key,
-    required this.filter,
-    required this.setFilter,
+    required this.activeFilter,
+    required this.onFilterChange,
   });
 
-  final Filter filter;
-  final void Function(Filter) setFilter;
+  final Filter activeFilter;
+  final void Function(Filter) onFilterChange;
 
   @override
   Widget build(BuildContext context) {
@@ -200,9 +223,9 @@ class Filters extends StatelessWidget {
       children: Filter.values.map((filter) {
         return FilterButton(
           text: filter.label,
-          isSelected: this.filter == filter,
+          isSelected: this.activeFilter == filter,
           onPressed: () {
-            setFilter(filter);
+            onFilterChange(filter);
           },
         );
       }).toList(),
@@ -227,7 +250,6 @@ class FilterButton extends StatelessWidget {
     var secondaryColor = Theme.of(context).colorScheme.secondary;
 
     return TextButton(
-      // add borders to buttons on hover
       style: ButtonStyle(
         shape: MaterialStateProperty.resolveWith<OutlinedBorder>(
           (Set<MaterialState> states) {
