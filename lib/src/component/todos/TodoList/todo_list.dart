@@ -32,6 +32,27 @@ class TodoList extends StatelessWidget {
     setTodos(newTodos);
   }
 
+  void onEdit(Todo currentTodo, String value) {
+    if (value.isEmpty) {
+      onDelete(currentTodo);
+      return;
+    }
+
+    var newTodos = todos.map((todo) {
+      if (todo.id == currentTodo.id) {
+        return Todo(
+          id: todo.id,
+          isDone: todo.isDone,
+          title: value,
+        );
+      }
+
+      return todo;
+    }).toList();
+
+    setTodos(newTodos);
+  }
+
   void onDelete(Todo currentTodo) {
     var newTodos = todos.where(
       (todo) => todo.id != currentTodo.id
@@ -61,6 +82,9 @@ class TodoList extends StatelessWidget {
           item: todo,
           onStatusChange: (newStatus) {
             onStatusChange(todo, newStatus);
+          },
+          onEdit: (value) {
+            onEdit(todo, value);
           },
           onDelete: () {
             onDelete(todo);
