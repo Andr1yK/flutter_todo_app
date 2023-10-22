@@ -32,6 +32,14 @@ class TodoList extends StatelessWidget {
     setTodos(newTodos);
   }
 
+  void onDelete(Todo currentTodo) {
+    var newTodos = todos.where(
+      (todo) => todo.id != currentTodo.id
+    ).toList();
+
+    setTodos(newTodos);
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Todo> visibleTodos = todos.where((todo) {
@@ -54,6 +62,9 @@ class TodoList extends StatelessWidget {
           onStatusChange: (newStatus) {
             onStatusChange(todo, newStatus);
           },
+          onDelete: () {
+            onDelete(todo);
+          }
         )
       ).toList(),
     );
