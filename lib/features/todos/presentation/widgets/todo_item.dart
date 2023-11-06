@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/src/types/todo.typedefs.dart';
+import 'package:flutter_todo_app/features/todos/domain/entities/todo.dart';
 
 class TodoItem extends StatefulWidget {
   const TodoItem({
@@ -10,7 +10,7 @@ class TodoItem extends StatefulWidget {
     required this.onDelete,
   }) : super(key: key);
 
-  final Todo item;
+  final TodoEntity item;
   final void Function(bool?) onStatusChange;
   final void Function(String) onEdit;
   final void Function() onDelete;
@@ -42,7 +42,7 @@ class _TodoItemState extends State<TodoItem> {
     });
 
     _focusNode.requestFocus();
-    _controller.text = widget.item.title;
+    _controller.text = widget.item.title ?? '';
   }
 
   @override
@@ -76,7 +76,7 @@ class _TodoItemState extends State<TodoItem> {
             scale: 1.25,
             child: Checkbox(
               fillColor: MaterialStateProperty.all(
-                  Colors.transparent,
+                Colors.transparent,
               ),
               splashRadius: 14,
               activeColor: Colors.transparent,
@@ -91,11 +91,11 @@ class _TodoItemState extends State<TodoItem> {
             ),
           ),
           trailing: isHovered
-              ? IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: widget.onDelete,
-                )
-              : null,
+            ? IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: widget.onDelete,
+            )
+            : null,
           title: isEditing
             ? TextField(
               focusNode: _focusNode,
@@ -119,8 +119,8 @@ class _TodoItemState extends State<TodoItem> {
             : GestureDetector(
               onDoubleTap:handleEditRequest,
               onLongPress: handleEditRequest,
-              child: Text(title),
-          ),
+              child: Text(title ?? ''),
+            ),
         ),
       ),
     );

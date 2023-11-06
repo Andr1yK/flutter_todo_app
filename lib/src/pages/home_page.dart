@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_app/features/todos/domain/entities/todo.dart';
 import 'package:flutter_todo_app/src/component/todos/AddTodoForm/add_todo_form.dart';
 import 'package:flutter_todo_app/src/component/todos/TodoList/todo_list.dart';
-import 'package:flutter_todo_app/src/types/todo.typedefs.dart';
 
 enum Filter {
   all('All'),
@@ -23,7 +23,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Filter filter = Filter.all;
 
-  List<Todo> todos = const [
+  List<TodoEntity> todos = const [
     Todo(
       id: 1,
       isDone: false,
@@ -89,6 +89,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(
