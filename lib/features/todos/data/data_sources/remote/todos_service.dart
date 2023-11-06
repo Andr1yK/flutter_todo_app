@@ -19,9 +19,17 @@ class TodosService {
   }
 
   Future<void> addTodo(TodoEntity todo) async {
-    await reference.push().set({
-      'title': todo.title,
-      'isDone': todo.isDone,
-    });
+    await reference.push()
+      .set(TodoModel.fromEntity(todo).toMap());
+  }
+
+  Future<void> updateTodo(TodoEntity todo) async {
+    await reference.child(todo.id!)
+      .update(TodoModel.fromEntity(todo).toMap());
+  }
+
+  Future<void> deleteTodo(TodoEntity todo) async {
+    await reference.child(todo.id!)
+      .remove();
   }
 }

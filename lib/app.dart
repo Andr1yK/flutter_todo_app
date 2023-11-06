@@ -33,43 +33,4 @@ class App extends StatelessWidget {
       ),
     );
   }
-
-  _buildBody() {
-    return BlocBuilder<RemoteTodoBloc, RemoteTodoState>(
-        builder: (_, state) {
-          if (state is RemoteTodoLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          if (state is RemoteTodoError) {
-            return const Center(
-              child: Icon(Icons.refresh),
-            );
-          }
-
-          if (state is RemoteTodoDone) {
-            return ListView.builder(
-              shrinkWrap: true,
-              itemBuilder: (_, index) {
-                return TodoItem(
-                  item: state.todos![index],
-                  onStatusChange: (bool? _) {  },
-                  onEdit: (String _) {  },
-                  onDelete: () {  },
-                );
-              },
-              itemCount: state.todos!.length,
-            );
-          }
-
-          return const Center(
-            child: Text('Something went wrong!'),
-          );
-        }
-    );
-
-
-  }
 }

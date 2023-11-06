@@ -32,4 +32,26 @@ class TodoRepositoryImpl implements TodoRepository {
       return DataError(e);
     }
   }
+
+  @override
+  Future<DataState<void>> updateTodo(TodoEntity todo) async {
+    try {
+      await _todosService.updateTodo(todo);
+
+      return const DataSuccess(null);
+    } on Error catch (e) {
+      return DataError(e);
+    }
+  }
+
+  @override
+  Future<DataState<void>> deleteTodo(TodoEntity todo) async {
+    try {
+      await _todosService.deleteTodo(todo);
+
+      return const DataSuccess(null);
+    } on Error catch (e) {
+      return DataError(e);
+    }
+  }
 }

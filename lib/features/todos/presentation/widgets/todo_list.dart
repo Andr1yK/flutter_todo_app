@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_todo_app/features/todos/domain/entities/todo.dart';
 import 'package:flutter_todo_app/features/todos/presentation/bloc/todos/remote/remote_todo_state.dart';
 import 'package:flutter_todo_app/features/todos/presentation/resources/filter.dart';
 import 'package:flutter_todo_app/features/todos/presentation/widgets/todo_item.dart';
@@ -31,17 +32,28 @@ class TodoList extends StatelessWidget {
         }
 
         if (state is RemoteTodoDone) {
+          var todos = state.todos!.where((todo) {
+            switch (filter) {
+              case Filter.active:
+                return !todo.isDone!;
+              case Filter.completed:
+                return todo.isDone!;
+              default:
+                return true;
+            }
+          }).toList();
+
           return ListView.builder(
             shrinkWrap: true,
             itemBuilder: (_, index) {
+              var todo = todos[index];
+
               return TodoItem(
-                item: state.todos![index],
-                onStatusChange: (bool? _) {  },
-                onEdit: (String _) {  },
-                onDelete: () {  },
+                key: Key('__todo_item_${todo.id}__'),
+                item: todo,
               );
             },
-            itemCount: state.todos!.length,
+            itemCount: todos.length,
           );
         }
 

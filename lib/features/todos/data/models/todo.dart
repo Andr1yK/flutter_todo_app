@@ -25,7 +25,6 @@ class TodoModel extends TodoEntity {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'title': title,
       'isDone': isDone,
     };

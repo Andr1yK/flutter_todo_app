@@ -5,4 +5,8 @@ abstract class TodoRepository {
   Future<DataState<List<TodoEntity>>> getTodos();
 
   Future<DataState<void>> addTodo(TodoEntity todo);
+
+  Future<DataState<void>> updateTodo(TodoEntity todo);
+
+  Future<DataState<void>> deleteTodo(TodoEntity todo);
 }

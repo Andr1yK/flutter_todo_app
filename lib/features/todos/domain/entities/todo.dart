@@ -13,4 +13,16 @@ class TodoEntity extends Equatable {
 
   @override
   List<Object?> get props => [id, title, isDone];
+
+  copyWith({
+    String ? id,
+    String ? title,
+    bool ? isDone,
+  }) {
+    return TodoEntity(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      isDone: isDone ?? this.isDone,
+    );
+  }
 }

@@ -1,3 +1,5 @@
+import 'package:flutter_todo_app/features/todos/domain/entities/todo.dart';
+
 abstract class RemoteTodoEvent {
   const RemoteTodoEvent();
 }
@@ -11,5 +13,21 @@ class AddTodo extends RemoteTodoEvent {
 
   const AddTodo({
     required this.title,
+  });
+}
+
+class UpdateTodo extends RemoteTodoEvent {
+  final TodoEntity item;
+
+  const UpdateTodo({
+    required this.item,
+  });
+}
+
+class DeleteTodo extends RemoteTodoEvent {
+  final TodoEntity item;
+
+  const DeleteTodo({
+    required this.item,
   });
 }
