@@ -1,4 +1,3 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/widgets.dart';
 
 import 'app.dart';
@@ -14,9 +13,6 @@ Future<void> main() async {
   );
 
   await initializeDependencies();
-
-  // FirebaseDatabase.instance.setPersistenceEnabled(true);
-  // FirebaseDatabase.instance.ref().keepSynced(true);
 
   runApp(const App());
 }

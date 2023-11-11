@@ -18,6 +18,21 @@ class TodosService {
     return todos.map(TodoModel.fromSnapshot).toList();
   }
 
+  Stream<List<TodoModel>> listenTodos() {
+    var stream = reference.onValue;
+    var mappedStream = stream.map((event) {
+      var todos = event.snapshot.children;
+
+      return todos.map(TodoModel.fromSnapshot).toList();
+    });
+
+    return mappedStream;
+  }
+
+  void dispose() {
+    reference.onValue.drain();
+  }
+
   Future<void> addTodo(TodoEntity todo) async {
     await reference.push()
       .set(TodoModel.fromEntity(todo).toMap());

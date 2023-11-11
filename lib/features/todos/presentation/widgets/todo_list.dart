@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_todo_app/features/todos/domain/entities/todo.dart';
 import 'package:flutter_todo_app/features/todos/presentation/bloc/todos/remote/remote_todo_state.dart';
 import 'package:flutter_todo_app/features/todos/presentation/resources/filter.dart';
 import 'package:flutter_todo_app/features/todos/presentation/widgets/todo_item.dart';

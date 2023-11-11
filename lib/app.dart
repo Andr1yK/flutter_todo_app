@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_todo_app/features/todos/presentation/bloc/todos/remote/remote_todo_bloc.dart';
 import 'package:flutter_todo_app/features/todos/presentation/bloc/todos/remote/remote_todo_event.dart';
-import 'package:flutter_todo_app/features/todos/presentation/bloc/todos/remote/remote_todo_state.dart';
-import 'package:flutter_todo_app/features/todos/presentation/widgets/todo_item.dart';
 
 import 'features/todos/presentation/pages/home_page.dart';
 import 'injection_container.dart' show sl;
@@ -14,8 +12,8 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<RemoteTodoBloc>(
-      create: (BuildContext context) {
-        return sl()..add(const GetTodos());
+      create: (_) {
+        return sl()..add(const TodosSubscription());
       },
       child: MaterialApp(
         title: 'ToDo App',
