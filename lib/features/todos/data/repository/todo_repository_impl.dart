@@ -54,4 +54,15 @@ class TodoRepositoryImpl implements TodoRepository {
       return DataError(e);
     }
   }
+
+  @override
+  Future<DataState<void>> toggleAll() async {
+    try {
+      await _todosService.toggleAll();
+
+      return const DataSuccess(null);
+    } on Error catch (e) {
+      return DataError(e);
+    }
+  }
 }

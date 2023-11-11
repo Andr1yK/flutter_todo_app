@@ -38,6 +38,11 @@ class AddTodoFormState extends State<AddTodoForm> {
     }
   }
 
+  void handleToggleAll() {
+    BlocProvider.of<RemoteTodoBloc>(context)
+      .add(const ToggleAll());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -47,7 +52,7 @@ class AddTodoFormState extends State<AddTodoForm> {
           Padding(
             padding: const EdgeInsets.only(left: 8),
             child: IconButton(
-              onPressed: () => {},
+              onPressed: handleToggleAll,
               icon: const Icon(Icons.arrow_drop_down),
               iconSize: 32,
             ),

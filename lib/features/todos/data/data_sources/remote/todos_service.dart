@@ -28,6 +28,20 @@ class TodosService {
       .update(TodoModel.fromEntity(todo).toMap());
   }
 
+  Future<void> toggleAll() async {
+    var todos = await getTodos();
+
+    var allDone = todos.every((todo) => todo.isDone == true);
+
+    List<TodoModel> newTodos = todos.map(
+      (todo) => todo.copyWith(isDone: !allDone)
+    ).toList();
+
+    await reference.set(
+      newTodos.map((todo) => todo.toMap()).toList(),
+    );
+  }
+
   Future<void> deleteTodo(TodoEntity todo) async {
     await reference.child(todo.id!)
       .remove();

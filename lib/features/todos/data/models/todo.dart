@@ -29,4 +29,17 @@ class TodoModel extends TodoEntity {
       'isDone': isDone,
     };
   }
+
+  @override
+  TodoModel copyWith({
+    String? id,
+    String? title,
+    bool? isDone,
+  }) {
+    return TodoModel(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      isDone: isDone ?? this.isDone,
+    );
+  }
 }

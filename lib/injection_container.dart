@@ -8,6 +8,7 @@ import 'package:flutter_todo_app/features/todos/presentation/bloc/todos/remote/r
 import 'package:get_it/get_it.dart';
 
 import 'features/todos/domain/usecases/delete_todo.dart';
+import 'features/todos/domain/usecases/toggle_all.dart';
 
 final sl = GetIt.instance;
 
@@ -32,6 +33,10 @@ Future<void> initializeDependencies() async {
     UpdateTodoUseCase(sl())
   );
 
+  sl.registerSingleton<ToggleAllUseCase>(
+    ToggleAllUseCase(sl())
+  );
+
   sl.registerSingleton<DeleteTodoUseCase>(
     DeleteTodoUseCase(sl())
   );
@@ -39,6 +44,7 @@ Future<void> initializeDependencies() async {
   // Blocs
   sl.registerFactory<RemoteTodoBloc>(
     () => RemoteTodoBloc(
+      sl(),
       sl(),
       sl(),
       sl(),

@@ -24,6 +24,10 @@ class UpdateTodo extends RemoteTodoEvent {
   });
 }
 
+class ToggleAll extends RemoteTodoEvent {
+  const ToggleAll();
+}
+
 class DeleteTodo extends RemoteTodoEvent {
   final TodoEntity item;
 
