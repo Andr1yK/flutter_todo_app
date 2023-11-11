@@ -35,3 +35,7 @@ class DeleteTodo extends RemoteTodoEvent {
     required this.item,
   });
 }
+
+class ClearCompleted extends RemoteTodoEvent {
+  const ClearCompleted();
+}

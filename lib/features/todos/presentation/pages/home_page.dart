@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_app/features/todos/presentation/widgets/footer.dart';
 
 import '../resources/filter.dart';
 import '../widgets/add_todo_form.dart';
@@ -14,13 +15,19 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Filter filter = Filter.all;
 
+  void setFilter(Filter newFilter) {
+    setState(() {
+      filter = newFilter;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 24
+          horizontal: 12,
+          vertical: 24
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -64,6 +71,10 @@ class _HomePageState extends State<HomePage> {
                       child: TodoList(
                         filter: filter,
                       ),
+                    ),
+                    Footer(
+                      activeFilter: filter,
+                      onFilterChange: setFilter,
                     ),
                   ],
                 ),

@@ -4,11 +4,11 @@ import 'package:flutter_todo_app/features/todos/domain/repository/todo_repositor
 import 'package:flutter_todo_app/features/todos/domain/usecases/add_todo.dart';
 import 'package:flutter_todo_app/features/todos/domain/usecases/get_todos.dart';
 import 'package:flutter_todo_app/features/todos/domain/usecases/update_todo.dart';
+import 'package:flutter_todo_app/features/todos/domain/usecases/clear_completed.dart';
+import 'package:flutter_todo_app/features/todos/domain/usecases/delete_todo.dart';
+import 'package:flutter_todo_app/features/todos/domain/usecases/toggle_all.dart';
 import 'package:flutter_todo_app/features/todos/presentation/bloc/todos/remote/remote_todo_bloc.dart';
 import 'package:get_it/get_it.dart';
-
-import 'features/todos/domain/usecases/delete_todo.dart';
-import 'features/todos/domain/usecases/toggle_all.dart';
 
 final sl = GetIt.instance;
 
@@ -40,10 +40,15 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<DeleteTodoUseCase>(
     DeleteTodoUseCase(sl())
   );
+
+  sl.registerSingleton<ClearCompletedUseCase>(
+    ClearCompletedUseCase(sl())
+  );
   
   // Blocs
   sl.registerFactory<RemoteTodoBloc>(
     () => RemoteTodoBloc(
+      sl(),
       sl(),
       sl(),
       sl(),

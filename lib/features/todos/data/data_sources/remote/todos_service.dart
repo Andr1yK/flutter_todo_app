@@ -46,4 +46,17 @@ class TodosService {
     await reference.child(todo.id!)
       .remove();
   }
+
+  Future<void> deleteTodos(List<TodoEntity> todos) async {
+    if (todos.isEmpty) {
+      return;
+    }
+
+    await reference.update(
+      todos.fold({}, (acc, todo) {
+        acc[todo.id!] = null;
+        return acc;
+      }),
+    );
+  }
 }

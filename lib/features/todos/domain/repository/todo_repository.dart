@@ -11,4 +11,6 @@ abstract class TodoRepository {
   Future<DataState<void>> deleteTodo(TodoEntity todo);
 
   Future<DataState<void>> toggleAll();
+
+  Future<DataState<void>> clearCompleted();
 }

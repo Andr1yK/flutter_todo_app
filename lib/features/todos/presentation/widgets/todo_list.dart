@@ -43,18 +43,25 @@ class TodoList extends StatelessWidget {
             }
           }).toList();
 
-          return ListView.builder(
-            shrinkWrap: true,
-            itemBuilder: (_, index) {
-              var todo = todos[index];
+          return todos.isEmpty
+            ? const SizedBox(
+              height: 48,
+              child: Center(
+                child: Text('No todos'),
+              ),
+            )
+            : ListView.builder(
+              shrinkWrap: true,
+              itemBuilder: (_, index) {
+                var todo = todos[index];
 
-              return TodoItem(
-                key: Key('__todo_item_${todo.id}__'),
-                item: todo,
-              );
-            },
-            itemCount: todos.length,
-          );
+                return TodoItem(
+                  key: Key('__todo_item_${todo.id}__'),
+                  item: todo,
+                );
+              },
+              itemCount: todos.length,
+            );
         }
 
         return const Center(

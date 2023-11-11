@@ -65,4 +65,21 @@ class TodoRepositoryImpl implements TodoRepository {
       return DataError(e);
     }
   }
+
+  @override
+  Future<DataState<void>> clearCompleted() async {
+    try {
+      var todos = await _todosService.getTodos();
+
+      var completedTodos = todos
+        .where((todo) => todo.isDone == true)
+        .toList();
+
+      await _todosService.deleteTodos(completedTodos);
+
+      return const DataSuccess(null);
+    } on Error catch (e) {
+      return DataError(e);
+    }
+  }
 }
