@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/src/types/todo.typedefs.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_todo_app/features/todos/domain/entities/todo.dart';
+import 'package:flutter_todo_app/features/todos/presentation/bloc/todos/remote/remote_todo_bloc.dart';
+import 'package:flutter_todo_app/features/todos/presentation/bloc/todos/remote/remote_todo_event.dart';
 
 class TodoItem extends StatefulWidget {
   const TodoItem({
     Key? key,
     required this.item,
-    required this.onStatusChange,
-    required this.onEdit,
-    required this.onDelete,
   }) : super(key: key);
 
-  final Todo item;
-  final void Function(bool?) onStatusChange;
-  final void Function(String) onEdit;
-  final void Function() onDelete;
+  final TodoEntity item;
 
   @override
   State<TodoItem> createState() => _TodoItemState();
@@ -27,22 +24,42 @@ class _TodoItemState extends State<TodoItem> {
   bool isEditing = false;
   String? newTitle;
 
-  void onEditingComplete() {
+  void _onEditingComplete() {
     setState(() {
       isEditing = false;
     });
 
-    widget.onEdit(newTitle!);
+    BlocProvider.of<RemoteTodoBloc>(context).add(
+      UpdateTodo(
+        item: widget.item.copyWith(title: newTitle),
+      ),
+    );
   }
 
-  void handleEditRequest() {
+  void _handleEditRequest() {
     setState(() {
       isEditing = true;
       newTitle = widget.item.title;
     });
 
     _focusNode.requestFocus();
-    _controller.text = widget.item.title;
+    _controller.text = widget.item.title ?? '';
+  }
+
+  void _onStatusChange(bool? newStatus) {
+    BlocProvider.of<RemoteTodoBloc>(context).add(
+      UpdateTodo(
+        item: widget.item.copyWith(isDone: newStatus),
+      ),
+    );
+  }
+
+  void _onDelete() {
+    BlocProvider.of<RemoteTodoBloc>(context).add(
+      DeleteTodo(
+        item: widget.item,
+      ),
+    );
   }
 
   @override
@@ -76,13 +93,13 @@ class _TodoItemState extends State<TodoItem> {
             scale: 1.25,
             child: Checkbox(
               fillColor: MaterialStateProperty.all(
-                  Colors.transparent,
+                Colors.transparent,
               ),
               splashRadius: 14,
               activeColor: Colors.transparent,
               checkColor: Colors.green,
               value: isDone,
-              onChanged: widget.onStatusChange,
+              onChanged: _onStatusChange,
               shape: const CircleBorder(),
               side: const BorderSide(
                 width: 1,
@@ -91,11 +108,11 @@ class _TodoItemState extends State<TodoItem> {
             ),
           ),
           trailing: isHovered
-              ? IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: widget.onDelete,
-                )
-              : null,
+            ? IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: _onDelete,
+            )
+            : null,
           title: isEditing
             ? TextField(
               focusNode: _focusNode,
@@ -109,18 +126,18 @@ class _TodoItemState extends State<TodoItem> {
                 });
               },
               onTapOutside: (_) {
-                onEditingComplete();
+                _onEditingComplete();
               },
-              onEditingComplete: onEditingComplete,
+              onEditingComplete: _onEditingComplete,
               onSubmitted: (_) {
-                onEditingComplete();
+                _onEditingComplete();
               },
             )
             : GestureDetector(
-              onDoubleTap:handleEditRequest,
-              onLongPress: handleEditRequest,
-              child: Text(title),
-          ),
+              onDoubleTap:_handleEditRequest,
+              onLongPress: _handleEditRequest,
+              child: Text(title ?? ''),
+            ),
         ),
       ),
     );
