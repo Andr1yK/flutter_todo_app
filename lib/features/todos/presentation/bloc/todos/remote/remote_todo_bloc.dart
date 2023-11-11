@@ -1,17 +1,18 @@
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_todo_app/core/resources/data_state.dart';
 import 'package:flutter_todo_app/features/todos/domain/entities/todo.dart';
 import 'package:flutter_todo_app/features/todos/domain/usecases/add_todo.dart';
 import 'package:flutter_todo_app/features/todos/domain/usecases/clear_completed.dart';
 import 'package:flutter_todo_app/features/todos/domain/usecases/delete_todo.dart';
-import 'package:flutter_todo_app/features/todos/domain/usecases/get_todos.dart';
+import 'package:flutter_todo_app/features/todos/domain/usecases/todos_subscription.dart';
 import 'package:flutter_todo_app/features/todos/domain/usecases/toggle_all.dart';
 import 'package:flutter_todo_app/features/todos/domain/usecases/update_todo.dart';
 import 'package:flutter_todo_app/features/todos/presentation/bloc/todos/remote/remote_todo_event.dart';
 import 'package:flutter_todo_app/features/todos/presentation/bloc/todos/remote/remote_todo_state.dart';
 
 class RemoteTodoBloc extends Bloc<RemoteTodoEvent, RemoteTodoState> {
-  final GetTodosUseCase _getTodosUseCase;
+  final TodosSubscriptionUseCase _todosSubscriptionUseCase;
   final AddTodoUseCase _addTodoUseCase;
   final UpdateTodoUseCase _updateTodoUseCase;
   final ToggleAllUseCase _toggleAllUseCase;
@@ -19,14 +20,17 @@ class RemoteTodoBloc extends Bloc<RemoteTodoEvent, RemoteTodoState> {
   final ClearCompletedUseCase _clearCompletedUseCase;
 
   RemoteTodoBloc(
-    this._getTodosUseCase,
+    this._todosSubscriptionUseCase,
     this._addTodoUseCase,
     this._updateTodoUseCase,
     this._toggleAllUseCase,
     this._deleteTodoUseCase,
     this._clearCompletedUseCase,
   ): super(const RemoteTodoLoading()) {
-    on <GetTodos> (onGetTodos);
+    on <TodosSubscription> (
+      onTodosSubscription,
+      transformer: restartable(),
+    );
     on <AddTodo> (onAddTodo);
     on <UpdateTodo> (onUpdateTodo);
     on <ToggleAll> (onToggleAll);
@@ -34,20 +38,21 @@ class RemoteTodoBloc extends Bloc<RemoteTodoEvent, RemoteTodoState> {
     on <ClearCompleted> (onClearCompleted);
   }
 
-  void onGetTodos(GetTodos event, Emitter<RemoteTodoState> emit) async {
-    final todos = await _getTodosUseCase();
+  Future<void> onTodosSubscription(TodosSubscription event, Emitter<RemoteTodoState> emit) {
+    return emit.forEach(
+      _todosSubscriptionUseCase(),
+      onData: (todos) {
+        if (todos is DataSuccess) {
+          return RemoteTodoDone(todos: todos.data!);
+        }
 
-    if (todos is DataSuccess) {
-      emit(
-        RemoteTodoDone(todos: todos.data ?? []),
-      );
-    }
+        if (todos is DataError) {
+          return RemoteTodoError(error: todos.error!);
+        }
 
-    if (todos is DataError) {
-      emit(
-        RemoteTodoError(error: todos.error!),
-      );
-    }
+        return const RemoteTodoLoading();
+      },
+    );
   }
 
   void onAddTodo(AddTodo event, Emitter<RemoteTodoState> emit) async {
@@ -57,45 +62,32 @@ class RemoteTodoBloc extends Bloc<RemoteTodoEvent, RemoteTodoState> {
         isDone: false,
       ),
     );
-
-    final todos = await _getTodosUseCase();
-
-    emit(RemoteTodoDone(todos: todos.data!));
   }
 
   void onUpdateTodo(UpdateTodo event, Emitter<RemoteTodoState> emit) async {
     await _updateTodoUseCase(
       params: event.item,
     );
-
-    final todos = await _getTodosUseCase();
-
-    emit(RemoteTodoDone(todos: todos.data!));
   }
 
   void onToggleAll(ToggleAll event, Emitter<RemoteTodoState> emit) async {
     await _toggleAllUseCase();
-
-    final todos = await _getTodosUseCase();
-
-    emit(RemoteTodoDone(todos: todos.data!));
   }
 
   void onDeleteTodo(DeleteTodo event, Emitter<RemoteTodoState> emit) async {
     await _deleteTodoUseCase(
       params: event.item,
     );
-
-    final todos = await _getTodosUseCase();
-
-    emit(RemoteTodoDone(todos: todos.data!));
   }
 
   void onClearCompleted(ClearCompleted event, Emitter<RemoteTodoState> emit) async {
     await _clearCompletedUseCase();
+  }
 
-    final todos = await _getTodosUseCase();
+  @override
+  Future<void> close() {
+    _todosSubscriptionUseCase.dispose();
 
-    emit(RemoteTodoDone(todos: todos.data!));
+    return super.close();
   }
 }

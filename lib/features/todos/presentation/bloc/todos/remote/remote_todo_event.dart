@@ -4,8 +4,8 @@ abstract class RemoteTodoEvent {
   const RemoteTodoEvent();
 }
 
-class GetTodos extends RemoteTodoEvent {
-  const GetTodos();
+class TodosSubscription extends RemoteTodoEvent {
+  const TodosSubscription();
 }
 
 class AddTodo extends RemoteTodoEvent {

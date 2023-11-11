@@ -4,6 +4,10 @@ import 'package:flutter_todo_app/features/todos/domain/entities/todo.dart';
 abstract class TodoRepository {
   Future<DataState<List<TodoEntity>>> getTodos();
 
+  Stream<DataState<List<TodoEntity>>> listenTodos();
+
+  void dispose();
+
   Future<DataState<void>> addTodo(TodoEntity todo);
 
   Future<DataState<void>> updateTodo(TodoEntity todo);

@@ -2,7 +2,7 @@ import 'package:flutter_todo_app/features/todos/data/data_sources/remote/todos_s
 import 'package:flutter_todo_app/features/todos/data/repository/todo_repository_impl.dart';
 import 'package:flutter_todo_app/features/todos/domain/repository/todo_repository.dart';
 import 'package:flutter_todo_app/features/todos/domain/usecases/add_todo.dart';
-import 'package:flutter_todo_app/features/todos/domain/usecases/get_todos.dart';
+import 'package:flutter_todo_app/features/todos/domain/usecases/todos_subscription.dart';
 import 'package:flutter_todo_app/features/todos/domain/usecases/update_todo.dart';
 import 'package:flutter_todo_app/features/todos/domain/usecases/clear_completed.dart';
 import 'package:flutter_todo_app/features/todos/domain/usecases/delete_todo.dart';
@@ -21,8 +21,8 @@ Future<void> initializeDependencies() async {
   );
 
   // Use cases
-  sl.registerSingleton<GetTodosUseCase>(
-    GetTodosUseCase(sl())
+  sl.registerSingleton<TodosSubscriptionUseCase>(
+    TodosSubscriptionUseCase(sl())
   );
 
   sl.registerSingleton<AddTodoUseCase>(

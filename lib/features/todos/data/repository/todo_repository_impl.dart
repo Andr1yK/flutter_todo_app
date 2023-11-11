@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_todo_app/core/resources/data_state.dart';
 import 'package:flutter_todo_app/features/todos/data/data_sources/remote/todos_service.dart';
 import 'package:flutter_todo_app/features/todos/data/models/todo.dart';
@@ -16,10 +18,26 @@ class TodoRepositoryImpl implements TodoRepository {
 
       return DataSuccess(todos);
     } on Error catch (e) {
-      print(e);
-
       return DataError(e);
     }
+  }
+
+  @override
+  Stream<DataState<List<TodoModel>>> listenTodos() {
+    try {
+      var todos = _todosService.listenTodos();
+
+      return todos.map((event) {
+        return DataSuccess(event);
+      });
+    } on Error catch (e) {
+      return Stream.value(DataError(e));
+    }
+  }
+
+  @override
+  void dispose() {
+    _todosService.dispose();
   }
 
   @override
