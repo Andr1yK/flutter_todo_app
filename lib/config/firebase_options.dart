@@ -21,10 +21,7 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for android - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return android;
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
@@ -32,12 +29,12 @@ class DefaultFirebaseOptions {
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
+              'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
+              'you can reconfigure this by running the FlutterFire CLI again.',
         );
       default:
         throw UnsupportedError(
@@ -52,6 +49,15 @@ class DefaultFirebaseOptions {
     messagingSenderId: '63218994003',
     projectId: 'flutter-todo-app-14b85',
     authDomain: 'flutter-todo-app-14b85.firebaseapp.com',
+    databaseURL: 'https://flutter-todo-app-14b85-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'flutter-todo-app-14b85.appspot.com',
+  );
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyCRRxJBw8yIg_2s6XYQdwAruPwpkNzcM-s',
+    appId: '1:63218994003:android:15085559b2aaf487896fa6',
+    messagingSenderId: '63218994003',
+    projectId: 'flutter-todo-app-14b85',
     databaseURL: 'https://flutter-todo-app-14b85-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'flutter-todo-app-14b85.appspot.com',
   );
@@ -73,6 +79,6 @@ class DefaultFirebaseOptions {
     projectId: 'flutter-todo-app-14b85',
     databaseURL: 'https://flutter-todo-app-14b85-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'flutter-todo-app-14b85.appspot.com',
-    iosBundleId: 'com.example.flutterTodoApp.RunnerTests',
+    iosBundleId: 'com.example.flutterTodoApp.Runner',
   );
 }

@@ -6,8 +6,7 @@ class TodosService {
   final reference = FirebaseDatabase.instance.ref('Todos');
 
   Future<List<TodoModel>> getTodos() async {
-    var data = await reference.once();
-    var snapshot = data.snapshot;
+    var snapshot = await reference.get();
 
     if (!snapshot.exists) {
       return [];
